@@ -3,7 +3,7 @@
 struct c
 {
     bool direction;
-    char job[10];
+    char job[11];
 };
 
 struct command
@@ -20,22 +20,23 @@ int main()
     for (int i = 0; i < n; i++)
     {
         scanf("%hd", &person[i].direction);
-        scanf("%s", &person[i].job);
+        scanf("%s", person[i].job);
     }
+
     command b[m];
     int cnt = 0;
     for (int i = 0; i < m; i++)
     {
         scanf("%hd%d", &b[i].a, &b[i].s);
+        b[i].s %= n;
         if (person[cnt].direction ^ b[i].a)
         {
-            if (cnt + b[i].s >= n)
-                cnt = cnt + b[i].s - n;
-            else cnt += b[i].s;
+            cnt = (cnt + b[i].s) % n;
         }
-        else if (cnt - b[i].s < 0)
-            cnt = n - (b[i].s - cnt);
-        else cnt -= b[i].s;
+        else
+            cnt = (cnt - b[i].s + n) % n;
+        
+
     }
     printf("%s", person[cnt].job);
     return 0;
