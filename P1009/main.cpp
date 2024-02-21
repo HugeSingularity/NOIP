@@ -8,15 +8,13 @@ struct add
     int a[4010];
     int len = 0;
 
-    add(char x[] = nullptr)
+    add(int x = 0)
     {
         memset(a, 0, sizeof(a));
-        if (x == nullptr) return;
-        int l = strlen(x);
-        for (int i = 0; i < l; i++)
+        while (x)
         {
-            a[l - 1 - i] = x[i] - '0';
-            len++;
+            a[len++] = x % 10;
+            x /= 10;
         }
     }
 
@@ -33,7 +31,7 @@ struct add
 
     add operator* (add b)
     {
-        add tmp;
+        add tmp(0);
         tmp.len = len + b.len;
         for (int i = 0; i < len; i++)
         {
@@ -49,7 +47,7 @@ struct add
 
     add operator+ (add b)
     {
-        add tmp;
+        add tmp(0);
         tmp.len = max(len, b.len) + 1;
         for (int i = 0; i < tmp.len - 1; i++)
         {
@@ -62,19 +60,17 @@ struct add
 
 int main()
 {
-    char x[2010], y[2010];
-    memset(x, 0, sizeof(x));
-    memset(y, 0, sizeof(y));
-    scanf("%s%s", x, y);
-    add a(x);
-    add b(y);
-    add c = a * b;
-    if (c.len == 0)
+    short n;
+    add ans;
+    scanf("%hd", &n);
+    add b[n + 1];
+    b[1] = add(1);
+    ans = b[1];
+    for (int i = 2; i <= n; i++)
     {
-        printf("0");
-        return 0;
+        b[i] = add(i) * b[i - 1];
+        ans = ans + b[i];
     }
-    for (int i = c.len - 1; i >= 0; i--)
-        printf("%d", c.a[i]);
-    return 0;
+    for (int i = ans.len - 1; i >= 0; i--)
+        printf("%d", ans.a[i]);
 }
